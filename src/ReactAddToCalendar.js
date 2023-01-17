@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import helpersClass from "./helpers";
@@ -10,17 +10,17 @@ export default class ReactAddToCalendar extends React.Component {
 
     this.state = {
       optionsOpen: props.optionsOpen || false,
-      isCrappyIE: false
+      isCrappyIE: false,
     };
 
     this.toggleCalendarDropdown = this.toggleCalendarDropdown.bind(this);
     this.handleDropdownLinkClick = this.handleDropdownLinkClick.bind(this);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // polyfill for startsWith to fix IE bug
     if (!String.prototype.startsWith) {
-      String.prototype.startsWith = function(searchString, position) {
+      String.prototype.startsWith = function (searchString, position) {
         position = position || 0;
         return this.indexOf(searchString, position) === position;
       };
@@ -86,7 +86,7 @@ export default class ReactAddToCalendar extends React.Component {
   renderDropdown() {
     let self = this;
 
-    let items = this.props.listItems.map(listItem => {
+    let items = this.props.listItems.map((listItem) => {
       let currentItem = Object.keys(listItem)[0];
       let currentLabel = listItem[currentItem];
 
@@ -96,7 +96,11 @@ export default class ReactAddToCalendar extends React.Component {
           currentItem === "outlook" || currentItem === "outlookcom"
             ? "windows"
             : currentItem;
-        icon = listItem.icon ? listItem.icon : <i className={"fa fa-" + currentIcon} />;
+        icon = listItem.icon ? (
+          listItem.icon
+        ) : (
+          <i className={"fa fa-" + currentIcon} />
+        );
       }
 
       return (
@@ -140,7 +144,9 @@ export default class ReactAddToCalendar extends React.Component {
 
       const mainButtonIconClass =
         template[0] === "caret"
-          ? this.state.optionsOpen ? "caret-up" : "caret-down"
+          ? this.state.optionsOpen
+            ? "caret-up"
+            : "caret-down"
           : template[0];
 
       let buttonIconClass = `${buttonClassPrefix} ${iconPrefix}${mainButtonIconClass}`;
@@ -211,10 +217,11 @@ ReactAddToCalendar.propTypes = {
     description: PropTypes.string,
     location: PropTypes.string,
     startTime: PropTypes.string,
-    endTime: PropTypes.string
+    endTime: PropTypes.string,
   }).isRequired,
   listItems: PropTypes.arrayOf(PropTypes.object),
-  rootClass: PropTypes.string
+  rootClass: PropTypes.string,
+  hideButton: PropTypes.bool,
 };
 
 ReactAddToCalendar.defaultProps = {
@@ -228,19 +235,20 @@ ReactAddToCalendar.defaultProps = {
   displayItemIcons: true,
   optionsOpen: false,
   dropdownClass: "react-add-to-calendar-recurring__dropdown",
+  hideButton: false,
   event: {
     title: "Sample Event",
     description: "This is the sample event provided as an example only",
     location: "Portland, OR",
     startTime: "2016-09-16T20:15:00-04:00",
-    endTime: "2016-09-16T21:45:00-04:00"
+    endTime: "2016-09-16T21:45:00-04:00",
   },
   listItems: [
     { apple: "Apple Calendar" },
     { google: "Google" },
     { outlook: "Outlook" },
     { outlookcom: "Outlook.com" },
-    { yahoo: "Yahoo" }
+    { yahoo: "Yahoo" },
   ],
-  rootClass: "react-add-to-calendar-recurring"
+  rootClass: "react-add-to-calendar-recurring",
 };
